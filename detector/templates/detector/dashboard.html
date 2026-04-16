@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal Detection Dashboard</title>
+    <style>
+        :root {
+            --bg: #f6f3ea;
+            --panel: #fffdf8;
+            --ink: #18222d;
+            --muted: #5d6a74;
+            --accent: #c65d2e;
+            --accent-dark: #8d3f1c;
+            --border: #e7ddce;
+            --good: #1f7a5a;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                radial-gradient(circle at top left, rgba(198, 93, 46, 0.15), transparent 35%),
+                linear-gradient(180deg, #f9f6ef 0%, var(--bg) 100%);
+            color: var(--ink);
+        }
+        .wrap {
+            width: min(1100px, calc(100% - 32px));
+            margin: 32px auto 56px;
+        }
+        .hero, .panel {
+            background: rgba(255, 253, 248, 0.94);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            box-shadow: 0 18px 50px rgba(24, 34, 45, 0.07);
+        }
+        .hero {
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+        h1, h2, h3 { margin: 0 0 12px; }
+        p { color: var(--muted); line-height: 1.6; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-top: 22px;
+        }
+        .stat, .panel {
+            padding: 20px;
+        }
+        .stat {
+            background: #fff9f1;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+        }
+        .label {
+            font-size: 0.84rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+        }
+        .value {
+            margin-top: 8px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 24px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 140px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 14px;
+            font: inherit;
+            background: #fffdfa;
+        }
+        button {
+            border: 0;
+            border-radius: 999px;
+            background: var(--accent);
+            color: white;
+            padding: 12px 18px;
+            font: inherit;
+            cursor: pointer;
+        }
+        button:hover { background: var(--accent-dark); }
+        .message {
+            background: rgba(31, 122, 90, 0.08);
+            color: var(--good);
+            border: 1px solid rgba(31, 122, 90, 0.15);
+            padding: 12px 14px;
+            border-radius: 14px;
+            margin-bottom: 16px;
+        }
+        .signal-list, .run-list {
+            display: grid;
+            gap: 14px;
+        }
+        .card {
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: #fffdfa;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(198, 93, 46, 0.12);
+            color: var(--accent-dark);
+            font-size: 0.86rem;
+            margin-bottom: 10px;
+        }
+        a { color: var(--accent-dark); }
+        .muted { color: var(--muted); font-size: 0.95rem; }
+        code {
+            background: #f3eadc;
+            border-radius: 8px;
+            padding: 2px 6px;
+        }
+        @media (max-width: 860px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <section class="hero">
+            <h1>Signal Detection Dashboard</h1>
+            <p>
+                Run a local hiring and recruiting signal scanner over RSS or HTML sources,
+                store results in Django, and review structured business signals for outreach.
+            </p>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <div class="stats">
+                <div class="stat">
+                    <div class="label">Signals Stored</div>
+                    <div class="value">{{ stats.total|default:0 }}</div>
+                </div>
+                <div class="stat">
+                    <div class="label">Companies Seen</div>
+                    <div class="value">{{ stats.companies|default:0 }}</div>
+                </div>
+                <div class="stat">
+                    <div class="label">Average Score</div>
+                    <div class="value">{{ stats.avg_score|floatformat:0|default:"0" }}</div>
+                </div>
+                <div class="stat">
+                    <div class="label">Top Score</div>
+                    <div class="value">{{ stats.top_score|default:0 }}</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid">
+            <section class="panel">
+                <h2>Run Detection</h2>
+                <p>Enter one source per line. Leave this blank to use the bundled sample feeds.</p>
+                <form method="post" action="{% url 'detector:run' %}">
+                    {% csrf_token %}
+                    <textarea name="sources" placeholder="{% for source in default_sources %}{{ source }}{% if not forloop.last %}&#10;{% endif %}{% endfor %}"></textarea>
+                    <p class="muted">Sample feeds are local files, so the app works offline.</p>
+                    <button type="submit">Run Signal Detection</button>
+                </form>
+            </section>
+
+            <section class="panel">
+                <h2>Recent Runs</h2>
+                <div class="run-list">
+                    {% for run in runs %}
+                        <div class="card">
+                            <h3><a href="{% url 'detector:run_detail' run.id %}">Run {{ run.id }}</a></h3>
+                            <p class="muted">
+                                {{ run.created_at }}<br>
+                                Sources: {{ run.source_count }}<br>
+                                Signals: {{ run.signal_count }}
+                            </p>
+                        </div>
+                    {% empty %}
+                        <div class="card">
+                            <p>No detection runs yet. Start with the sample feeds.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+
+        <section class="panel" style="margin-top: 24px;">
+            <h2>Latest Signals</h2>
+            <div class="signal-list">
+                {% for signal in signals %}
+                    <article class="card">
+                        <div class="badge">{{ signal.get_signal_type_display }} · Score {{ signal.signal_score }}</div>
+                        <h3>{{ signal.company }}</h3>
+                        <p><strong>{{ signal.title }}</strong></p>
+                        <p>{{ signal.reason }}</p>
+                        <p class="muted">
+                            Keywords: {{ signal.matched_keywords|join:", " }}<br>
+                            Source: <a href="{{ signal.source_url }}" target="_blank" rel="noreferrer">{{ signal.source_url }}</a>
+                        </p>
+                    </article>
+                {% empty %}
+                    <div class="card">
+                        <p>No signals stored yet. Run the detector to populate the dashboard.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</body>
+</html>

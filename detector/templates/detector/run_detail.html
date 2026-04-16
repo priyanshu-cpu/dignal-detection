@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run {{ run.id }}</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            background: #f7f1e7;
+            color: #1d252f;
+        }
+        .wrap {
+            width: min(980px, calc(100% - 32px));
+            margin: 32px auto;
+        }
+        .panel {
+            background: #fffdf8;
+            border: 1px solid #e7ddce;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 18px 50px rgba(24, 34, 45, 0.07);
+        }
+        .card {
+            padding: 16px;
+            border: 1px solid #e7ddce;
+            border-radius: 16px;
+            margin-top: 14px;
+            background: #fffaf2;
+        }
+        a { color: #8d3f1c; }
+        .muted { color: #5d6a74; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="panel">
+            <p><a href="{% url 'detector:dashboard' %}">Back to dashboard</a></p>
+            <h1>Run {{ run.id }}</h1>
+            <p class="muted">
+                {{ run.created_at }}<br>
+                Sources processed: {{ run.source_count }}<br>
+                Signals stored: {{ run.signal_count }}
+            </p>
+
+            {% for signal in run.signals.all %}
+                <div class="card">
+                    <h2>{{ signal.company }} · {{ signal.get_signal_type_display }}</h2>
+                    <p><strong>{{ signal.title }}</strong></p>
+                    <p>{{ signal.reason }}</p>
+                    <p class="muted">
+                        Score: {{ signal.signal_score }}<br>
+                        Keywords: {{ signal.matched_keywords|join:", " }}<br>
+                        Source: <a href="{{ signal.source_url }}" target="_blank" rel="noreferrer">{{ signal.source_url }}</a>
+                    </p>
+                </div>
+            {% empty %}
+                <p>No signals in this run.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

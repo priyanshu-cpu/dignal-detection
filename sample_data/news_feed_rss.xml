@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>News Feed</title>
+    <item>
+      <title>Amazon hiring spree creates 3500 new roles in the US</title>
+      <link>https://www.aboutamazon.com/news/job-creation-and-investment/expanding-our-tech-hubs-to-create-3-500-new-jobs-in-the-u-s</link>
+      <description>Amazon announced 3500 new roles across six US cities and is growing its engineers and sales team.</description>
+      <pubDate>Mon, 17 Feb 2025 13:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>ExampleSoft publishes product update</title>
+      <link>https://www.djangoproject.com/weblog/</link>
+      <description>The release covers performance fixes and dashboard improvements.</description>
+      <pubDate>Tue, 15 Apr 2026 07:45:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

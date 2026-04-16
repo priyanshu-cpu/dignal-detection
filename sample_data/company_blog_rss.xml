@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Company Blog</title>
+    <item>
+      <title>Amazon hiring 250000 people in the US this holiday season</title>
+      <link>https://www.aboutamazon.com/news/workplace/amazon-seasonal-holiday-jobs-2025</link>
+      <description>Amazon says it is hiring 250000 people this holiday season and expanding teams across its fulfillment and transportation network.</description>
+      <pubDate>Wed, 08 Oct 2025 09:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Microsoft recruitment FAQs for recruiters and hiring managers</title>
+      <link>https://careers.microsoft.com/v2/global/en/hiringfaqs.html</link>
+      <description>Microsoft explains profile visibility to recruiters, hiring managers, and the application process for candidates.</description>
+      <pubDate>Fri, 11 Apr 2025 08:15:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
