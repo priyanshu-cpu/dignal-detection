@@ -15,7 +15,6 @@ and also exports JSON output for machine-readable downstream usage.
 - Shared helpers under `utils/`
 - Local JSON output plus Django SQLite database storage
 - CLI runner and Django management command
-- Optional serverless-style handler function
 - Sample public-data fixtures for offline testing
 
 ## Project Structure
@@ -41,6 +40,7 @@ manage.py
 ## Run
 
 ```bash
+pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
