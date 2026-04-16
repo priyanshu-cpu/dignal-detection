@@ -1,4 +1,4 @@
-# Django Signal Detection Assignment
+# Django Signal Detection 
 
 This project implements the assignment as a local Django application.
 
